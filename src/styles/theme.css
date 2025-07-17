@@ -1,0 +1,257 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========= WebAff Theme Tokens ========= */
+:root {
+  --waff-bg: #000;
+  --waff-panel-bg: #111;
+  --waff-panel-border: #333;
+  --waff-text: #fff;
+
+  --waff-accent-mod: #8b5cf6;    /* viola: modulazioni */
+  --waff-accent-fx: #fbbf24;     /* giallo: effetti */
+  --waff-accent-master: #f87171; /* rosso: master */
+
+  --waff-radius: 4px;
+  --waff-pad: 1rem;
+  --waff-pad-sm: 0.5rem;
+  --waff-pad-xs: 0.25rem;
+}
+
+/* Body reset */
+body {
+  background: var(--waff-bg);
+  color: var(--waff-text);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  margin: 0;
+}
+
+/* Panel helper */
+.waff-panel {
+  background: var(--waff-panel-bg);
+  border: 1px solid var(--waff-panel-border);
+  border-radius: var(--waff-radius);
+  padding: var(--waff-pad);
+}
+
+/* Scrollbar dark */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #1a1a1a; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #777; }
+
+/* Canvas responsive scaling */
+.waf-canvas-fluid {
+  width: 100%;
+  max-width: 1024px;   /* non oltre la sua risoluzione nativa */
+  height: auto;
+  aspect-ratio: 1 / 1; /* mantiene 1:1 quando ridimensionato */
+}
+.image-render-pixelated {
+  image-rendering: pixelated;
+}
+
+/* Accent helpers */
+.waff-accent-mod    { color: var(--waff-accent-mod); }
+.waff-accent-fx     { color: var(--waff-accent-fx); }
+.waff-accent-master { color: var(--waff-accent-master); }
+
+/* ModuleCard header stripe */
+.waff-panel > h3 {
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--waff-panel-border);
+  font-size: 0.85rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+/* PANEL WRAPPER -------------------------------------------------- */
+.waff-panel {
+  padding: 0.75rem;
+  background: var(--waff-panel-bg);
+  border: 1px solid var(--waff-panel-border);
+  border-radius: 4px;
+}
+
+/* PANEL HEADER --------------------------------------------------- */
+.waff-panel-header {
+  padding-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--waff-panel-border);
+  display: block;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+/* ACCENTS -------------------------------------------------------- */
+.waff-accent-mod    { color: var(--waff-accent-mod); }
+.waff-accent-fx     { color: var(--waff-accent-fx); }
+.waff-accent-master { color: var(--waff-accent-master); }
+
+/* KNOB ----------------------------------------------------------- */
+.waf-knob svg {
+  pointer-events: none;
+}
+.waf-knob:focus-visible > div[tabindex] {
+  outline: 2px solid var(--waff-accent-fx);
+  outline-offset: 2px;
+}
+
+/* ================================================================
+   LAYOUT ROOT
+   ---------------------------------------------------------------- */
+.waff-layout-root {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: var(--waff-app-bg, #000); /* fallback */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+/* HEADER --------------------------------------------------------- */
+.waff-layout-header {
+  flex: 0 0 auto;
+  height: 40px;
+  padding: 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--waff-header-bg, #111);
+  border-bottom: 1px solid var(--waff-panel-border);
+  font-size: 0.8rem;
+  line-height: 1;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+/* BODY 3-COL GRID ------------------------------------------------ */
+.waff-layout-body {
+  flex: 1 1 auto;
+  min-height: 0; /* critical for overflow containers */
+  display: grid;
+  grid-template-columns: 22% 1fr 28%;
+  grid-template-areas: "left center right";
+  gap: 0;
+  overflow: hidden;
+}
+
+/* REGIONS -------------------------------------------------------- */
+.waff-layout-left {
+  grid-area: left;
+  padding: 1rem 0.75rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--waff-panel-border);
+}
+.waff-layout-center {
+  grid-area: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto; /* allow scroll if canvas larger than viewport */
+  padding: 0.5rem;
+}
+.waff-layout-right {
+  grid-area: right;
+  padding: 1rem 0.75rem;
+  overflow-y: auto;
+  border-left: 1px solid var(--waff-panel-border);
+}
+
+/* RESPONSIVE BREAKPOINTS ---------------------------------------- */
+@media (max-width: 1024px) {
+  .waff-layout-body {
+    grid-template-columns: 240px 1fr;
+    grid-template-areas:
+      "left header-right"
+      "left center"
+      "left right";
+    grid-auto-rows: auto;
+  }
+  .waff-layout-right {
+    border-left: none;
+    border-top: 1px solid var(--waff-panel-border);
+    padding-top: 0.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .waff-layout-body {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .waff-layout-left,
+  .waff-layout-right,
+  .waff-layout-center {
+    border: none;
+    padding: 0.75rem;
+  }
+  .waff-layout-center {
+    order: -1; /* put canvas first on mobile */
+  }
+}
+
+.unlock-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+}
+
+/* ===================== STEP C EXTENSIONS ======================= */
+
+/* HEADER TOOLBUTTONS */
+.waff-header-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:0.25rem;
+  padding:0.25rem 0.5rem;
+  font-size:11px;
+  line-height:1;
+  border:1px solid var(--waff-panel-border);
+  border-radius:4px;
+  background:#222;
+  cursor:pointer;
+  transition:background 0.12s;
+}
+.waff-header-btn:hover { background:#333; }
+.waff-header-btn[disabled],
+.waff-header-btn[aria-disabled="true"] {
+  opacity:0.4;
+  cursor:not-allowed;
+}
+
+/* INLINE ICON COLOR ACCENTS */
+.waff-header-btn.mod svg { color:var(--waff-accent-mod); }
+.waff-header-btn.fx svg { color:var(--waff-accent-fx); }
+.waff-header-btn.master svg { color:var(--waff-accent-master); }
+
+/* MASTER EQ TRIPLE COLUMN */
+.waff-eq-triple {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0.75rem;
+  margin-bottom:0.75rem;
+}
+
+/* reduce margin bottom inside ModuleCard for compact sets */
+.waff-panel .mb-tight { margin-bottom:0.5rem; }
+
+/* vertical slider wrapper label below */
+.waff-vslider-wrap {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:48px;
+}
+.waff-vslider-wrap label {
+  margin-top:0.25rem;
+  font-size:10px;
+  opacity:0.8;
+  text-align:center;
+}
